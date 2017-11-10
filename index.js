@@ -15,6 +15,12 @@ server.get('/api/todos/:name', (req, res, next) => {
     todos ? res.send(todos) : res.status(400).send({ error: 'Sorry invalid request' })
 })
 
+server.get('/api/todos/:name/:index', (req, res, next) => {
+    var todos = db[req.params.name]
+    var todo = todos ? todos[req.params.index] : null
+    todo ? res.send(todo) : res.status(400).send({ error: 'Sorry invalid request' })
+})
+
 server.post('/api/todos/:name', (req, res, next) => {
     db[req.params.name] = db[req.params.name] || []
     var todos = db[req.params.name]
