@@ -1,6 +1,10 @@
 var express = require('express')
+var bp = require('body-parser')
 var server = express()
 var port = process.env.PORT || 8080
+
+server.use(bp.json())
+server.use(bp.urlencoded({ extended: true }))
 
 var db = {
 
