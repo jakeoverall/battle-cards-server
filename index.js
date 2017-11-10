@@ -31,8 +31,9 @@ server.post('/api/todos/:name', (req, res, next) => {
 server.put('/api/todos/:name/:index', (req, res, next) => {
     var todos = db[req.params.name]
     var index = req.params.index
-    if (todos[req.params[index]]) {
-        todos[req.params[index]] = req.body
+    if (todos[req.params.index]) {
+        todos[req.params.index] = req.body
+        res.send({message: 'successfully updated your todo. GOOD JOB!'})
     } else {
         res.status(400).send({ error: 'Sorry invalid request' })
     }
