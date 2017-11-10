@@ -42,8 +42,9 @@ server.put('/api/todos/:name/:index', (req, res, next) => {
 server.delete('/api/todos/:name/:index', (req, res, next) => {
     var todos = db[req.params.name]
     var index = req.params.index
-    if (todos[req.params[index]]) {
+    if (todos[req.params.index]) {
         todos.splice(index, 1)
+        res.send({message: 'successfully removed todo'})
     } else {
         res.status(400).send({ error: 'Sorry invalid request' })
     }
