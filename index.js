@@ -5,8 +5,15 @@ var uuid = require('uuid')
 var port = process.env.PORT || 9080
 var server = express()
 
-server.options('*', cors())
-server.use('*',cors())
+var options = {
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 200
+  }
+
+server.options('*', cors(options))
+server.use('*', cors(options))
 server.use(bp.json())
 server.use(bp.urlencoded({ extended: true }))
 
