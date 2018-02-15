@@ -1,8 +1,9 @@
 var express = require('express')
 var bp = require('body-parser')
-var server = express()
-var port = process.env.PORT || 8080
 var cors = require('cors')
+var uuid = require('uuid')
+var port = process.env.PORT || 8080
+var server = express()
 
 server.use(cors())
 server.use(bp.json())
@@ -12,41 +13,54 @@ var db = {
 
 }
 
+function createTodo(todo) {
+    return { id: uuid.v4, ...todo }
+}
+
 server.get('/api/todos/:name', (req, res, next) => {
     var todos = db[req.params.name]
     todos ? res.send(todos) : res.status(400).send({ error: 'Sorry invalid request' })
 })
 
-server.get('/api/todos/:name/:index', (req, res, next) => {
+server.get('/api/todos/:name/:id', (req, res, next) => {
     var todos = db[req.params.name]
-    var todo = todos ? todos[req.params.index] : null
+    var todo = todos ? todos.find(t => t.id == req.params.id) : null
     todo ? res.send(todo) : res.status(400).send({ error: 'Sorry invalid request' })
 })
 
 server.post('/api/todos/:name', (req, res, next) => {
     db[req.params.name] = db[req.params.name] || []
     var todos = db[req.params.name]
-    todos.push(req.body)
-    res.send(todos)
+    var todo = createTodo(req.body)
+    todos.push(todo)
+    res.send({message: 'successfully added todo', data: todo})
 })
 
-server.put('/api/todos/:name/:index', (req, res, next) => {
+server.put('/api/todos/:name/:id', (req, res, next) => {
+    db[req.params.name] = db[req.params.name] || []
     var todos = db[req.params.name]
-    var index = req.params.index
-    if (todos[req.params.index]) {
-        todos[req.params.index] = req.body
-        res.send({message: 'successfully updated your todo. GOOD JOB!'})
+    var id = req.params.id
+    var todo = todos.find(t => t.id == id)
+    if (todo) {
+        for(var k in req.body){
+            if(k != 'id'){
+                todo[k] = req.body[k]
+            }
+        }
+        res.send({ message: 'successfully updated your todo. GOOD JOB!' })
     } else {
         res.status(400).send({ error: 'Sorry invalid request' })
     }
 })
 
 server.delete('/api/todos/:name/:index', (req, res, next) => {
+    db[req.params.name] = db[req.params.name] || []
     var todos = db[req.params.name]
     var index = req.params.index
-    if (todos[req.params.index]) {
-        todos.splice(index, 1)
-        res.send({message: 'successfully removed todo'})
+    var i = todos.indexOf(t => t.id == id)
+    if (i != -1) {
+        todos.splice(i, 1)
+        res.send({ message: 'successfully removed todo' })
     } else {
         res.status(400).send({ error: 'Sorry invalid request' })
     }
