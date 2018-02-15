@@ -6,7 +6,7 @@ var port = process.env.PORT || 9080
 var server = express()
 
 server.options('*', cors())
-server.use('*',cors())
+server.use(cors())
 server.use(bp.json())
 server.use(bp.urlencoded({ extended: true }))
 
