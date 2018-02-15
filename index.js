@@ -5,8 +5,8 @@ var uuid = require('uuid')
 var port = process.env.PORT || 9080
 var server = express()
 
-
-server.use(cors())
+server.options('*', cors())
+server.use('*',cors())
 server.use(bp.json())
 server.use(bp.urlencoded({ extended: true }))
 
@@ -119,7 +119,7 @@ server.delete('/api/:name/:id', (req, res, next) => {
     var id = req.params.id
     var item = items.find(t => t.id == id)
     var i = items.indexOf(item)
-    
+
     if (i != -1) {
         items.splice(i, 1)
         res.send({ message: 'successfully removed item' })
