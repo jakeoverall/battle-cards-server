@@ -77,7 +77,7 @@ function createItem(item) {
 }
 
 server.get('/api/:collection', (req, res, next) => {
-    var collection = db[req.params.collection]
+    var collection = db[req.params.collection] = db[req.params.collection] || []
     collection ? res.send(collection) : res.status(400).send({ error: 'Sorry invalid request' })
 })
 
