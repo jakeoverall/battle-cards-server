@@ -13,67 +13,8 @@ var db = {
 
 }
 
-// function createTodo(todo) {
-//     return { id: uuid.v4, ...todo }
-// }
-
-// server.get('/api/todos/:name', (req, res, next) => {
-//     var todos = db[req.params.name]
-//     todos ? res.send(todos) : res.status(400).send({ error: 'Sorry invalid request' })
-// })
-
-// server.get('/api/todos/:name/:id', (req, res, next) => {
-//     var todos = db[req.params.name]
-//     var todo = todos ? todos.find(t => t.id == req.params.id) : null
-//     todo ? res.send(todo) : res.status(400).send({ error: 'Sorry invalid request' })
-// })
-
-// server.post('/api/todos/:name', (req, res, next) => {
-//     db[req.params.name] = db[req.params.name] || []
-//     var todos = db[req.params.name]
-//     var todo = createTodo(req.body)
-//     todos.push(todo)
-//     res.send({message: 'successfully added todo', data: todo})
-// })
-
-// server.put('/api/todos/:name/:id', (req, res, next) => {
-//     db[req.params.name] = db[req.params.name] || []
-//     var todos = db[req.params.name]
-//     var id = req.params.id
-//     var todo = todos.find(t => t.id == id)
-//     if (todo) {
-//         for(var k in req.body){
-//             if(k != 'id'){
-//                 todo[k] = req.body[k]
-//             }
-//         }
-//         res.send({ message: 'successfully updated your todo. GOOD JOB!' })
-//     } else {
-//         res.status(400).send({ error: 'Sorry invalid request' })
-//     }
-// })
-
-// server.delete('/api/todos/:name/:index', (req, res, next) => {
-//     db[req.params.name] = db[req.params.name] || []
-//     var todos = db[req.params.name]
-//     var index = req.params.index
-//     var i = todos.indexOf(t => t.id == id)
-//     if (i != -1) {
-//         todos.splice(i, 1)
-//         res.send({ message: 'successfully removed todo' })
-//     } else {
-//         res.status(400).send({ error: 'Sorry invalid request' })
-//     }
-// })
-
-
-
-
-
-
-
 function createItem(item) {
-    return { id: uuid.v4(), ...item }
+    return { ...item, id: uuid.v4() }
 }
 
 server.get('/api/:collection', (req, res, next) => {
@@ -92,7 +33,7 @@ server.post('/api/:collection', (req, res, next) => {
     var collection = db[req.params.collection]
     var item = createItem(req.body)
     collection.push(item)
-    res.send({message: 'successfully added item', data: item})
+    res.send({ message: 'successfully added item', data: item })
 })
 
 server.put('/api/:name/:id', (req, res, next) => {
@@ -101,8 +42,8 @@ server.put('/api/:name/:id', (req, res, next) => {
     var id = req.params.id
     var item = items.find(t => t.id == id)
     if (item) {
-        for(var k in req.body){
-            if(k != 'id'){
+        for (var k in req.body) {
+            if (k != 'id') {
                 item[k] = req.body[k]
             }
         }
@@ -128,6 +69,14 @@ server.delete('/api/:name/:id', (req, res, next) => {
 })
 
 
+var cards = require('./cards')
+
+
+server.post('/cards', cards.start)
+server.get('/cards', cards.getGames)
+server.get('/cards/:id', cards.get)
+server.put('/cards/:id', cards.play)
+server.delete('/cards/:id', cards.deleteGame)
 
 
 
@@ -139,4 +88,6 @@ server.delete('/api/:name/:id', (req, res, next) => {
 
 
 
-server.listen(port)
+server.listen(port, () => {
+    console.log('running on port: ', port)
+})
