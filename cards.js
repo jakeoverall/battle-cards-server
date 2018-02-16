@@ -171,7 +171,7 @@ function deleteGame(req, res, next) {
 }
 
 function getGames(req, res, next) {
-    dbgames.find({}, games => {
+    dbgames.find({}, (err, games) => {
         res.send(games)
     })
 }
