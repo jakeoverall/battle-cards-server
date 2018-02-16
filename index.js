@@ -37,7 +37,7 @@ server.get('/api/:collection/:id', (req, res, next) => {
         var item = collection ? collection.find(t => t.id == req.params.id) : null
         item ? res.send(item) : res.status(400).send({ error: 'Sorry invalid request' })
     } else {
-        collection.find({ id: req.params.id }, (e, doc) => {
+        collection.findOne({ id: req.params.id }, (e, doc) => {
             res.send(doc)
         })
     }
@@ -53,15 +53,15 @@ server.post('/api/:collection', (req, res, next) => {
         res.send({ message: 'successfully added item', data: item })
     } else {
         collection.insert(item, (e, doc) => {
-            res.send(doc)
+            res.send({ message: 'successfully added item', data: doc })
         })
     }
 
 })
 
-server.put('/api/:name/:id', (req, res, next) => {
-    db[req.params.name] = db[req.params.name] || []
-    var collection = db[req.params.name]
+server.put('/api/:collection/:id', (req, res, next) => {
+    db[req.params.collection] = db[req.params.collection] || []
+    var collection = db[req.params.collection]
     var id = req.params.id
     if (Array.isArray(collection)) {
         var item = collection.find(t => t.id == id)
@@ -80,9 +80,9 @@ server.put('/api/:name/:id', (req, res, next) => {
     res.send({ message: 'successfully updated your item. GOOD JOB!' })
 })
 
-server.delete('/api/:name/:id', (req, res, next) => {
-    db[req.params.name] = db[req.params.name] || []
-    var collection = db[req.params.name]
+server.delete('/api/:collection/:id', (req, res, next) => {
+    db[req.params.collection] = db[req.params.collection] || []
+    var collection = db[req.params.collection]
     var id = req.params.id
 
     if (Array.isArray(collection)) {
